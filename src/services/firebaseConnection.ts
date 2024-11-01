@@ -5,17 +5,16 @@ import { getAuth } from "firebase/auth";
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAy-Mtmk5EiiP9lDk6tdU0KvhH_308vhFY",
-  authDomain: "reactlinks-d0d66.firebaseapp.com",
-  projectId: "reactlinks-d0d66",
-  storageBucket: "reactlinks-d0d66.appspot.com",
-  messagingSenderId: "323643120247",
-  appId: "1:323643120247:web:39718769cb68da5f43c472"
+  apiKey: "AIzaSyA4XnOVaVm_nuwBy391ML-iwPiFbBoORgo",
+  authDomain: "linktree-93082.firebaseapp.com",
+  projectId: "linktree-93082",
+  storageBucket: "linktree-93082.firebasestorage.app",
+  messagingSenderId: "1063943954611",
+  appId: "1:1063943954611:web:9c31aabb18f4f3981650c6"
 };
-
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const firestore = getFirestore(app);
+const db = getFirestore(app);
 
-export {auth,firestore};
+export {auth, db};
