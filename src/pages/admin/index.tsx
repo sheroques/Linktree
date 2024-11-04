@@ -1,17 +1,50 @@
 
 import {Header} from '../../components/Header'
 import { Input } from '../../components/input'
-import { FormEvent, useState } from 'react'
+import { FormEvent, useState, useEffect } from 'react'
 import {FiTrash} from 'react-icons/fi'
 import{db} from '../../services/firebaseConnection'
 import {addDoc, collection, onSnapshot, query, orderBy, doc, deleteDoc,} from 'firebase/firestore'
 
+interface LinkProps{
+    id: string;
+    name:string;
+    url:string;
+    bg: string;
+    color: string;
+}
 
 export function Admin(){
     const [nameInput, setNameInput] = useState("")
     const [urlInput, setUrlInput] = useState("")
     const [textColorInput, setTextColorInput] = useState("#f1f1f1")
     const [backgroundColorInput, setBackgroundColorInput] = useState('#121212')
+    const[links, setLinks]=useState<LinkProps[]>([])
+
+    useEffect(()=>{
+        const linksRef = collection( db,"links");
+        const queryRef = query(linksRef, orderBy("created", "asc"));
+        const unsub = onSnapshot(queryRef, (snapshot)=>{
+
+            let lista=[] as LinkProps[];
+
+            snapshot.forEach((doc)=>{
+                lista.push({
+                    id:doc.id,
+                    name: doc.data().name,
+                    url: doc.data().url,
+                    bg: doc.data().bg,
+                    color: doc.data().color
+                })
+            })
+            setLinks(lista);
+        })
+
+        return()=>{
+            unsub;
+        }
+    })
+    //3:05
     
     async function handleRegister(e: FormEvent){
         e.preventDefault();
@@ -25,6 +58,14 @@ export function Admin(){
             bg: backgroundColorInput,
             color: textColorInput,
             created: new Date()
+        })
+        .then(()=>{
+            setNameInput("")
+            setUrlInput("")
+            console.log("Cadastrado com sucesso")
+        })
+        .catch((error)=>{
+            console.log("Erro ao cadastrar" + error)
         })
     }
     //7:23
@@ -59,12 +100,14 @@ export function Admin(){
             </form>
             <h2 className='font-bold text-white mb-4 texte-2xl'> Meus Links</h2>
 
-            <article className='flex items-center justify-between max-w-xl rounded py-5 px-10 mb-2' style={{backgroundColor: '#2563EB', color:'#FFF'}}>
-                <p>Canal do youtube</p>
+            {links.map((Link)=>(
+                <article key={Link.id} className='flex items-center justify-between max-w-xl rounded py-5 px-10 mb-2' style={{backgroundColor: Link.bg, color:Link.color}}>
+                <p>{Link.name}</p>
             <div>
                 <button className='border border-dashed py-1 px-2 rounded ml-4 bg-black' ><FiTrash size={18} color="#fff"/> </button>
             </div>
             </article>
+            ))}
         </div>
     )
 }
