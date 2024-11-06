@@ -68,7 +68,10 @@ export function Admin(){
             console.log("Erro ao cadastrar" + error)
         })
     }
-    //7:23
+    async function handleDeleteLink(id: string){
+            const docRef = doc(db, "links", id)
+            await deleteDoc(docRef)
+        }
 
     return(
         <div className="flex items-center flex-col min-h-screen pb-7 px-2">
@@ -104,7 +107,8 @@ export function Admin(){
                 <article key={Link.id} className='flex items-center justify-between max-w-xl rounded py-5 px-10 mb-2' style={{backgroundColor: Link.bg, color:Link.color}}>
                 <p>{Link.name}</p>
             <div>
-                <button className='border border-dashed py-1 px-2 rounded ml-4 bg-black' ><FiTrash size={18} color="#fff"/> </button>
+
+                <button onClick={()=> handleDeleteLink(Link.id)} className='border border-dashed py-1 px-2 rounded ml-4 bg-black' ><FiTrash size={18} color="#fff"/> </button>
             </div>
             </article>
             ))}
