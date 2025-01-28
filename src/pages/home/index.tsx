@@ -47,6 +47,22 @@ export function Home(){
 
     })
 
+
+    useEffect(()=>{
+        function loadSocialLinks(){
+        const docRef =doc(db, "social", "link")
+        getDoc(docRef)
+        .then((snapshot)=>{
+            if(snapshot.data()!== undefined){
+                setSocialLinks({
+                    facebook: snapshot.data()?.facebook,
+                    instagram: snapshot.data()?.instagram,
+                    youtube: snapshot.data()?.youtube,
+                })
+            }
+        })
+    }
+    },[])
     return(
         <div className="flex flex-col w-full py-4 items-center justify-center">
             <h1 className=" md:text-4xl text-3xl font-bold text-white mt-20"> Home </h1>
@@ -61,17 +77,19 @@ export function Home(){
                           </a>
                 </section>
                 ))}
-                <footer className="flex justify-center gap-3 my-4">
-                    <Social url="https://facebook.com">
+                {socialLinks && Object.keys(socialLinks).length > 0 &&(
+                    <footer className="flex justify-center gap-3 my-4">
+                    <Social url={socialLinks?.facebook}>
                         <FaFacebook size={35} color='#FFF'/>
                     </Social>
-                    <Social url="https://youtube.com">
+                    <Social url={socialLinks?.youtube}>
                         <FaYoutube size={35} color='#FFF'/>
                     </Social>
-                    <Social url="https://instagram.com">
+                    <Social url={socialLinks?.instagram}>
                         <FaInstagram size={35} color='#FFF'/>
                     </Social>
                 </footer>
+                )}
             </main>
         </div>
     )
